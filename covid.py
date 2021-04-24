@@ -11,6 +11,10 @@ class TweetData:
         self.upvotes = int(upvotes)
         self.attachments = list(attachments)
         self.phone_numbers = list(phone_numbers)
+
+class TweetParser:
+    def parse_tweet(self, content):
+        pass
  
 class Main:
     # TODO : Replace with custom link
@@ -33,6 +37,11 @@ class Main:
         # Opening search results
         self.driver.get(self.LINK)
 
+    def move_page(self):
+        self.driver.execute_script("window.scrollTo(0, window.scrollY + 250)")
+        for i in range(0, 10):
+            self.driver.execute_script("window.scrollTo(0, window.scrollY - 100)")
+
     def find_timeline(self):
         # Trap loop to keep waiting for timeline to load
         timeline_parent = None
@@ -43,6 +52,9 @@ class Main:
                 pass
         # Trap loop to wait for content to load
         while (timeline_parent.text != ''):
+            # Note to self: Apparently accesing text stops the trap loop
+            print(timeline_parent.text)
+            self.move_page()
             time.sleep(1)
         #####
         # At this point we are mostly sure that the timeline has loaded
@@ -54,12 +66,10 @@ class Main:
     def scrape(self):
         while True:
             # Children of this element = Root elements of tweets
+            time.sleep(3)
+            self.move_page()
             tweets = self.timeline.find_elements_by_xpath("./child::*")
             print(tweets[0].text)
-            time.sleep(3)
-            self.driver.execute_script("window.scrollTo(0, window.scrollY + 250)")
-            for i in range(0, 10):
-                self.driver.execute_script("window.scrollTo(0, window.scrollY - 100)")
 
     def start(self):
         self.setup_webdriver()
@@ -68,4 +78,4 @@ class Main:
         print("debug")
         self.scrape()
 
-# Main().start()
+Main().start()
