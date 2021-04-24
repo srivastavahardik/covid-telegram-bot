@@ -13,8 +13,18 @@ class TweetData:
         self.phone_numbers = list(phone_numbers)
 
 class TweetParser:
-    def parse_tweet(self, content):
-        pass
+    def parse_tweet(self, tweet):
+        tweet_text = tweet.text
+        print(tweet_text)
+        try:
+            tweet_media = tweet.find_elements_by_class_name("css-9pa8cd")
+            print("media: " + str(len(tweet_media)))
+            for media in tweet_media:
+                print(media.get_attribute("src"))
+        except:
+            # no media
+            pass
+        print("------------------------")
  
 class Main:
     # TODO : Replace with custom link
@@ -64,12 +74,16 @@ class Main:
     
     # Runs infinitely to constantly find new tweets
     def scrape(self):
+        parser = TweetParser()
         while True:
             # Children of this element = Root elements of tweets
-            time.sleep(3)
             self.move_page()
             tweets = self.timeline.find_elements_by_xpath("./child::*")
-            print(tweets[0].text)
+            print(len(tweets))
+            for tweet in tweets:
+                parser.parse_tweet(tweet)
+            print("\n\n\n")
+            time.sleep(20)
 
     def start(self):
         self.setup_webdriver()
