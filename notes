@@ -1,0 +1,7 @@
+Strategy:
+- Load browser
+- Load a twitter search query link
+- Scroll down to a high threshold [~5000]
+-- Scrolling down to such Y position would mean that twitter feed is forced to load an hour worth of old content
+- Now gradually scroll up
+-- This way we can constantly parse data and as we scroll up twitter automatically updates its list with new tweets
