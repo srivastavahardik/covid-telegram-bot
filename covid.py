@@ -18,19 +18,21 @@ link = "https://twitter.com/search?q=verified+lucknow+%28bed+OR+beds+OR+icu+OR+o
 # Opening search results
 driver.get(link)
 
-timeline = None
+timeline_parent = None
 # Trap loop to keep waiting for timeline to load
-while (timeline == None):
+while (timeline_parent == None):
     try:
-        timeline = driver.find_element_by_xpath("//div[@aria-label='Timeline: Search timeline']")
+        timeline_parent = driver.find_element_by_xpath("//div[@aria-label='Timeline: Search timeline']")
     except:
         pass
 
 # Trap loop to wait for content to load
-while (timeline.text != ''):
+while (timeline_parent.text != ''):
     time.sleep(1)
 
 #####
 # At this point we are mostly sure that the timeline has loaded
 #####
-print(timeline.text)
+
+# First and only Child of timeline_parent is the actual timeline list element
+timeline = (timeline_parent.find_elements_by_xpath("./child::*"))[0]
