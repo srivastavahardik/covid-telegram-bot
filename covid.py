@@ -1,6 +1,7 @@
 #!/bin/python3
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import time
 
 # Setting up Chrome options
 option = webdriver.ChromeOptions()
@@ -18,9 +19,18 @@ link = "https://twitter.com/search?q=verified+lucknow+%28bed+OR+beds+OR+icu+OR+o
 driver.get(link)
 
 timeline = None
-# Trap loop to keep waiting for contents to load
+# Trap loop to keep waiting for timeline to load
 while (timeline == None):
     try:
         timeline = driver.find_element_by_xpath("//div[@aria-label='Timeline: Search timeline']")
     except:
         pass
+
+# Trap loop to wait for content to load
+while (timeline.text != ''):
+    time.sleep(1)
+
+#####
+# At this point we are mostly sure that the timeline has loaded
+#####
+print(timeline.text)
