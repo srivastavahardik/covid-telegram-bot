@@ -14,9 +14,30 @@ class TweetData:
 
 class TweetParser:
     def parse_tweet(self, tweet):
-        tweet_text = tweet.text
-        print(tweet_text)
         try:
+            # 'Jaideep Pandey\n@PandeyJaideep\n·\n1h\n#Lucknow #UPDATE #HospitalBeds #CovidHelp \n#Beds with #oxygen are available at St. Joseph Hospital in Gomti Nagar. Call:7947145417 #Verified at 1 AM. \n@awwwnchal\n @jeevika_shiv\n @neeleshmisra\n @Interceptors\n @bhaisaabpayal\n @YahyaRahmani19\n @lakhnauaa\n4\n3\n2'
+            tweet_text = tweet.find_elements_by_class_name("css-1dbjc4n")
+            print("text: ")
+            # First we cut using '·'
+            # Take the second part
+            # Then we cut using '\n'
+            # [1:] because 0th element is empty item
+            text_cut = str((str(tweet_text[0].text).split("·"))[1]).split("\n")[1:]
+            # print(text_cut)
+            # 0th element of text_cut is the age of tweet
+            # Last 3 elements include number of comments, number of retweets and number of likes
+            # ^ all might not exist
+            last_counter = 0
+            for i in range(0, 3):
+                try:
+                    # Assuming that the tweet is <1m in age
+                    if int(text_cut[-i]) < 50:
+                        last_counter -= 1
+                except:
+                    pass
+            tweet_age = text_cut[0]
+            tweet_text = text_cut[1:last_counter]
+            print("".join(tweet_text))
             tweet_media = tweet.find_elements_by_class_name("css-9pa8cd")
             print("media: " + str(len(tweet_media)))
             for media in tweet_media:
