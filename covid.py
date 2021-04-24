@@ -36,3 +36,9 @@ while (timeline_parent.text != ''):
 
 # First and only Child of timeline_parent is the actual timeline list element
 timeline = (timeline_parent.find_elements_by_xpath("./child::*"))[0]
+
+while True:
+    # Children of this element = Root elements of tweets
+    tweets = timeline.find_elements_by_xpath("./child::*")
+    print(len(tweets))
+    time.sleep(3)
