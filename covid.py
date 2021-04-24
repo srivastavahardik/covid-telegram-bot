@@ -3,6 +3,15 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 
+class TweetData:
+    def __init__(self, content, time, is_verified, upvotes, attachments, phone_numbers):
+        self.content = str(content)
+        self.time = str(time)
+        self.is_verified = bool(is_verified)
+        self.upvotes = int(upvotes)
+        self.attachments = list(attachments)
+        self.phone_numbers = list(phone_numbers)
+ 
 class Main:
     # TODO : Replace with custom link
     # Reference link
@@ -59,4 +68,4 @@ class Main:
         print("debug")
         self.scrape()
 
-Main().start()
+# Main().start()
