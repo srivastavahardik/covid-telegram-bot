@@ -2,6 +2,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
+from datetime import datetime, timedelta
 
 class TweetData:
     def __init__(self, content, time, is_verified, upvotes, attachments, phone_numbers):
@@ -46,7 +47,28 @@ class TweetParser:
             # no media
             pass
         print("------------------------")
- 
+
+    # twime = twitter time
+    def twime_to_string(self, twitter_time):
+        # 45s 5m 3h Apr 24
+        # converted to : 202104250422
+        twitter_time = str(twitter_time)
+        tweet_time = None
+        if len(twitter_time) <= 3:
+            last_char = twitter_time[-1]
+            diff = None
+            if last_char == 's':
+                diff = timedelta(seconds=int(twitter_time[0:-1]))
+            elif last_char == 'm':
+                diff = timedelta(minutes=int(twitter_time[0:-1]))
+            elif last_char == 'h':
+                diff = timedelta(hours=int(twitter_time[0:-1]))
+            now = datetime.now()
+            tweet_time = now - diff
+        else:
+            tweet_time = datetime.strptime("2021 " + twitter_time, "%Y %b %d")
+        return str(tweet_time.strftime("%Y%m%d%H%M"))
+
 class Main:
     # TODO : Replace with custom link
     # Reference link
