@@ -16,3 +16,11 @@ link = "https://twitter.com/search?q=verified+lucknow+%28bed+OR+beds+OR+icu+OR+o
 
 # Opening search results
 driver.get(link)
+
+timeline = None
+# Trap loop to keep waiting for contents to load
+while (timeline == None):
+    try:
+        timeline = driver.find_element_by_xpath("//div[@aria-label='Timeline: Search timeline']")
+    except:
+        pass
