@@ -5,3 +5,10 @@ Strategy:
 -- Scrolling down to such Y position would mean that twitter feed is forced to load an hour worth of old content
 - Now gradually scroll up
 -- This way we can constantly parse data and as we scroll up twitter automatically updates its list with new tweets
+
+
+Parsing:
+- Tweets are separated by a '.'
+- This '.' is however offset by +2 for tweets
+- Tweets follow a pattern where it is like:
+-- Name, ID, ., Time
