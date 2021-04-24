@@ -41,13 +41,24 @@ class TweetParser:
             # print("".join(tweet_text))
             tweet_media = tweet.find_elements_by_class_name("css-9pa8cd")
             # print("media: " + str(len(tweet_media)))
-            # for media in tweet_media:
-                # print(media.get_attribute("src"))
-            return TweetData("".join(tweet_text), self.twime_to_string(tweet_age), False, 0, [], [])
+            medias = []
+            for media in tweet_media:
+                media_src = media.get_attribute("src")
+                if self.is_media_valid(media_src) == True:
+                    medias.append(media_src)
+                
+            return TweetData("".join(tweet_text), self.twime_to_string(tweet_age), False, 0, medias, [])
         except:
             # no media
             return None
 
+    def is_media_valid(self, url):
+        unwanted = ["/profile_images/", "/emoji/"]
+        for unw in unwanted:
+            if unw in url:
+                return False
+        return True
+    
     # twime = twitter time
     def twime_to_string(self, twitter_time):
         # 45s 5m 3h Apr 24
@@ -127,6 +138,7 @@ class Main:
                 parsed = parser.parse_tweet(tweet)
                 if parsed != None:
                     print(parsed.content)
+                    print(parsed.attachments)
                 print("------------------------")
             time.sleep(20)
 
