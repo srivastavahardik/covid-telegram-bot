@@ -18,7 +18,7 @@ class TweetParser:
         try:
             # 'Jaideep Pandey\n@PandeyJaideep\n·\n1h\n#Lucknow #UPDATE #HospitalBeds #CovidHelp \n#Beds with #oxygen are available at St. Joseph Hospital in Gomti Nagar. Call:7947145417 #Verified at 1 AM. \n@awwwnchal\n @jeevika_shiv\n @neeleshmisra\n @Interceptors\n @bhaisaabpayal\n @YahyaRahmani19\n @lakhnauaa\n4\n3\n2'
             tweet_text = tweet.find_elements_by_class_name("css-1dbjc4n")
-            print("text: ")
+            # print("text: ")
             # First we cut using '·'
             # Take the second part
             # Then we cut using '\n'
@@ -38,15 +38,15 @@ class TweetParser:
                     pass
             tweet_age = text_cut[0]
             tweet_text = text_cut[1:last_counter]
-            print("".join(tweet_text))
+            # print("".join(tweet_text))
             tweet_media = tweet.find_elements_by_class_name("css-9pa8cd")
-            print("media: " + str(len(tweet_media)))
-            for media in tweet_media:
-                print(media.get_attribute("src"))
+            # print("media: " + str(len(tweet_media)))
+            # for media in tweet_media:
+                # print(media.get_attribute("src"))
+            return TweetData("".join(tweet_text), self.twime_to_string(tweet_age), False, 0, [], [])
         except:
             # no media
-            pass
-        print("------------------------")
+            return None
 
     # twime = twitter time
     def twime_to_string(self, twitter_time):
@@ -124,8 +124,10 @@ class Main:
             tweets = self.timeline.find_elements_by_xpath("./child::*")
             print(len(tweets))
             for tweet in tweets:
-                parser.parse_tweet(tweet)
-            print("\n\n\n")
+                parsed = parser.parse_tweet(tweet)
+                if parsed != None:
+                    print(parsed.content)
+                print("------------------------")
             time.sleep(20)
 
     def start(self):
