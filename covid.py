@@ -40,5 +40,8 @@ timeline = (timeline_parent.find_elements_by_xpath("./child::*"))[0]
 while True:
     # Children of this element = Root elements of tweets
     tweets = timeline.find_elements_by_xpath("./child::*")
-    print(len(tweets))
+    print(tweets[0].text)
     time.sleep(3)
+    driver.execute_script("window.scrollTo(0, window.scrollY + 250)")
+    for i in range(0, 10):
+        driver.execute_script("window.scrollTo(0, window.scrollY - 100)")
