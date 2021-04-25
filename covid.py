@@ -29,12 +29,7 @@ class TweetParser:
             tweet_content = self.get_tweet_text(text_cut)
 
             tweet_media = tweet.find_elements_by_class_name("css-9pa8cd")
-            # print("media: " + str(len(tweet_media)))
-            medias = []
-            for media in tweet_media:
-                media_src = media.get_attribute("src")
-                if self.is_media_valid(media_src) == True:
-                    medias.append(media_src)
+            medias = self.get_tweet_media(tweet_media)
             
             return TweetData(tweet_content, self.twime_to_string(tweet_age), False, 0, medias, self.extract_phone(tweet_content))
         except:
@@ -68,6 +63,15 @@ class TweetParser:
     def get_tweet_age(self, content):
         content = list(content)
         return str(content[0])
+
+    def get_tweet_media(self, tweet_media):
+        tweet_media = list(tweet_media)
+        medias = []
+        for media in tweet_media:
+            media_src = media.get_attribute("src")
+            if self.is_media_valid(media_src) == True:
+                medias.append(media_src)
+        return medias
 
     def is_media_valid(self, url):
         unwanted = ["/profile_images/", "/emoji/", "profile_image"]
