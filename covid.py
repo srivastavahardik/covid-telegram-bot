@@ -73,9 +73,9 @@ class TweetParser:
             except:
                 pass
 
-        tweet_text = tweet_content[1:]
+        tweet_text = tweet_content
         if last_counter != 0:
-            tweet_text = tweet_content[1:-last_counter]
+            tweet_text = tweet_content[0:-last_counter]
         tweet_content = " ".join(tweet_text)
         return str(tweet_content)
 
