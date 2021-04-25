@@ -147,14 +147,15 @@ class Main:
     # Setup options for chrome driver
     def setup_webdriver(self):
         # Setting up Chrome options
-        option = webdriver.ChromeOptions()
+        option = webdriver.FirefoxOptions()
+        # option = webdriver.ChromeOptions()
         # For ChromeDriver version 79.0.3945.16 or over
         # Hide automation
-        option.add_argument('--disable-blink-features=AutomationControlled')
+        # option.add_argument('--disable-blink-features=AutomationControlled')
         # Start headlessly
-        option.headless = True
+        option.headless = False
         # Open Browser
-        self.driver = webdriver.Chrome(executable_path='/usr/bin/chromedriver',options=option)
+        self.driver = webdriver.Firefox(options=option)
 
     def launch_webdriver(self):
         # Opening search results
