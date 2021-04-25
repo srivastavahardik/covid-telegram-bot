@@ -30,16 +30,19 @@ class TweetParser:
             # Last 3 elements include number of comments, number of retweets and number of likes
             # ^ all might not exist
             last_counter = 0
-            for i in range(0, 3):
+            if str(text_cut[-1]).lower() == "show this thread":
+                last_counter += 1
+            
+            for i in range(1 + last_counter, 4 + last_counter):
                 try:
-                    print(text_cut[-i])
                     # Assuming that the tweet is <1m in age
                     if int(text_cut[-i]) < 50:
-                        last_counter -= 1
+                        last_counter += 1
                 except:
                     pass
+            
             tweet_age = text_cut[0]
-            tweet_text = text_cut[1:last_counter]
+            tweet_text = text_cut[1:-last_counter]
             # print("".join(tweet_text))
             tweet_media = tweet.find_elements_by_class_name("css-9pa8cd")
             # print("media: " + str(len(tweet_media)))
