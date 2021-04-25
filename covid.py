@@ -55,7 +55,7 @@ class TweetParser:
                 if self.is_media_valid(media_src) == True:
                     medias.append(media_src)
             
-            tweet_content = "".join(tweet_text)
+            tweet_content = " ".join(tweet_text)
             return TweetData(tweet_content, self.twime_to_string(tweet_age), False, 0, medias, self.extract_phone(tweet_content))
         except:
             # no media
