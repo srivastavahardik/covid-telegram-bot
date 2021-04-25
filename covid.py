@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 from datetime import datetime, timedelta
+import re
 
 class TweetData:
     def __init__(self, content, time, is_verified, upvotes, attachments, phone_numbers):
@@ -31,6 +32,7 @@ class TweetParser:
             last_counter = 0
             for i in range(0, 3):
                 try:
+                    print(text_cut[-i])
                     # Assuming that the tweet is <1m in age
                     if int(text_cut[-i]) < 50:
                         last_counter -= 1
@@ -46,8 +48,9 @@ class TweetParser:
                 media_src = media.get_attribute("src")
                 if self.is_media_valid(media_src) == True:
                     medias.append(media_src)
-                
-            return TweetData("".join(tweet_text), self.twime_to_string(tweet_age), False, 0, medias, [])
+            
+            tweet_content = "".join(tweet_text)
+            return TweetData(tweet_content, self.twime_to_string(tweet_age), False, 0, medias, self.extract_phone(tweet_content))
         except:
             # no media
             return None
@@ -58,6 +61,21 @@ class TweetParser:
             if unw in url:
                 return False
         return True
+
+    # https://dev.to/samcodesign/phone-number-email-extractor-with-python-12g2
+    def extract_phone(self, content):
+        phoneRegex = re.compile(r'''(
+            (\d{2}|\(\d{2}\))? # area code
+            (\s|-|\.)? # separator
+            (\d{5}) # first 5 digits
+            (\s|-|\.|) # separator
+            (\d{5}) # last 5 digits
+        )''', re.VERBOSE)
+        matches = []
+        for groups in phoneRegex.findall(content):
+            phoneNum = ''.join([groups[1], groups[3], groups[5]])
+            matches.append(str(phoneNum))
+        return matches
     
     # twime = twitter time
     def twime_to_string(self, twitter_time):
@@ -139,6 +157,7 @@ class Main:
                 if parsed != None:
                     print(parsed.content)
                     print(parsed.attachments)
+                    print(parsed.phone_numbers)
                 print("------------------------")
             time.sleep(20)
 
