@@ -62,7 +62,7 @@ class TweetParser:
             return None
 
     def is_media_valid(self, url):
-        unwanted = ["/profile_images/", "/emoji/"]
+        unwanted = ["/profile_images/", "/emoji/", "profile_image"]
         for unw in unwanted:
             if unw in url:
                 return False
