@@ -26,6 +26,7 @@ class TweetParser:
             # [1:] because 0th element is empty item
             text_cut = str((str(tweet_text[0].text).split("·"))[1]).split("\n")[1:]
             tweet_age = self.get_tweet_age(text_cut)
+            text_cut = self.clean_tweet_content(text_cut[1:])
             tweet_content = self.get_tweet_text(text_cut)
             tweet_media = tweet.find_elements_by_class_name("css-9pa8cd")
             medias = self.get_tweet_media(tweet_media)
@@ -34,6 +35,20 @@ class TweetParser:
             print(e)
             # no media
             return None
+    
+    def clean_tweet_content(self, tweet_content):
+        tweet_content = list(tweet_content)
+        # Remove starting content like 'Replying to @kumarmanish9 @AnupamkPandey and @AdminLKO'
+        reply_index = 0
+        and_encountered = False
+        for word in tweet_content:
+            word = str(word).strip()
+            print("word : " + word)
+            if word[0] == '@' or word == "Replying to" or word == "and":
+                reply_index += 1
+            else:
+                break
+        return list(tweet_content[reply_index:])
 
     def get_tweet_text(self, tweet_content):
         tweet_content = list(tweet_content)
