@@ -42,7 +42,10 @@ class TweetParser:
                     pass
             
             tweet_age = text_cut[0]
-            tweet_text = text_cut[1:-last_counter]
+            tweet_text = text_cut[1:]
+            if last_counter != 0:
+                tweet_text = text_cut[1:-last_counter]
+
             # print("".join(tweet_text))
             tweet_media = tweet.find_elements_by_class_name("css-9pa8cd")
             # print("media: " + str(len(tweet_media)))
