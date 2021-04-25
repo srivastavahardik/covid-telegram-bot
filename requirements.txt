@@ -1,2 +1,2 @@
 selenium
-chromium
+Firefox + Geckodriver (Recommended) / Chromium
