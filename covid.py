@@ -151,6 +151,8 @@ class Main:
         # For ChromeDriver version 79.0.3945.16 or over
         # Hide automation
         option.add_argument('--disable-blink-features=AutomationControlled')
+        # Start headlessly
+        option.headless = True
         # Open Browser
         self.driver = webdriver.Chrome(executable_path='/usr/bin/chromedriver',options=option)
 
