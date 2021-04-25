@@ -136,9 +136,7 @@ class Main:
             except:
                 pass
         # Trap loop to wait for content to load
-        while (timeline_parent.text != ''):
-            # Note to self: Apparently accesing text stops the trap loop
-            print(timeline_parent.text)
+        while (len(str(timeline_parent.text)) == 0):
             self.move_page()
             time.sleep(1)
         #####
