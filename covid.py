@@ -25,28 +25,9 @@ class TweetParser:
             # Then we cut using '\n'
             # [1:] because 0th element is empty item
             text_cut = str((str(tweet_text[0].text).split("·"))[1]).split("\n")[1:]
-            # print(text_cut)
-            # 0th element of text_cut is the age of tweet
-            # Last 3 elements include number of comments, number of retweets and number of likes
-            # ^ all might not exist
-            last_counter = 0
-            if str(text_cut[-1]).lower() == "show this thread":
-                last_counter += 1
-            
-            for i in range(1 + last_counter, 4 + last_counter):
-                try:
-                    # Assuming that the tweet is <1m in age
-                    if int(text_cut[-i]) < 50:
-                        last_counter += 1
-                except:
-                    pass
-            
             tweet_age = self.get_tweet_age(text_cut)
-            tweet_text = text_cut[1:]
-            if last_counter != 0:
-                tweet_text = text_cut[1:-last_counter]
+            tweet_content = self.get_tweet_text(text_cut)
 
-            # print("".join(tweet_text))
             tweet_media = tweet.find_elements_by_class_name("css-9pa8cd")
             # print("media: " + str(len(tweet_media)))
             medias = []
@@ -55,11 +36,34 @@ class TweetParser:
                 if self.is_media_valid(media_src) == True:
                     medias.append(media_src)
             
-            tweet_content = " ".join(tweet_text)
             return TweetData(tweet_content, self.twime_to_string(tweet_age), False, 0, medias, self.extract_phone(tweet_content))
         except:
             # no media
             return None
+
+    def get_tweet_text(self, content):
+        content = list(content)
+        # print(text_cut)
+        # 0th element of text_cut is the age of tweet
+        # Last 3 elements include number of comments, number of retweets and number of likes
+        # ^ all might not exist
+        last_counter = 0
+        if str(content[-1]).lower() == "show this thread":
+            last_counter += 1
+        
+        for i in range(1 + last_counter, 4 + last_counter):
+            try:
+                # Assuming that the tweet is <1m in age
+                if int(content[-i]) < 50:
+                    last_counter += 1
+            except:
+                pass
+
+        tweet_text = content[1:]
+        if last_counter != 0:
+            tweet_text = content[1:-last_counter]
+        tweet_content = " ".join(tweet_text)
+        return str(tweet_content)
 
     def get_tweet_age(self, content):
         content = list(content)
