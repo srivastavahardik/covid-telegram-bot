@@ -41,7 +41,7 @@ class TweetParser:
                 except:
                     pass
             
-            tweet_age = text_cut[0]
+            tweet_age = self.get_tweet_age(text_cut)
             tweet_text = text_cut[1:]
             if last_counter != 0:
                 tweet_text = text_cut[1:-last_counter]
@@ -60,6 +60,10 @@ class TweetParser:
         except:
             # no media
             return None
+
+    def get_tweet_age(self, content):
+        content = list(content)
+        return str(content[0])
 
     def is_media_valid(self, url):
         unwanted = ["/profile_images/", "/emoji/", "profile_image"]
