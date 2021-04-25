@@ -27,7 +27,7 @@ class TweetParser:
             text_cut = str((str(tweet_text[0].text).split("·"))[1]).split("\n")[1:]
             tweet_age = self.get_tweet_age(text_cut)
             text_cut = self.clean_tweet_content(text_cut[1:])
-            tweet_content = self.get_tweet_text(text_cut)
+            tweet_content = self.prettify_content(self.get_tweet_text(text_cut))
             tweet_media = tweet.find_elements_by_class_name("css-9pa8cd")
             medias = self.get_tweet_media(tweet_media)
             return TweetData(tweet_content, self.twime_to_string(tweet_age), False, 0, medias, self.extract_phone(tweet_content))
@@ -49,6 +49,12 @@ class TweetParser:
             else:
                 break
         return list(tweet_content[reply_index:])
+
+    def prettify_content(self, content):
+        # Any post processing which needs to be applied to text
+        content = str(content).strip()
+        content = content.replace("  ", " ")
+        return content
 
     def get_tweet_text(self, tweet_content):
         tweet_content = list(tweet_content)
