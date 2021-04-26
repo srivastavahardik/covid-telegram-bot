@@ -135,7 +135,7 @@ class TweetParser:
             if "2021" in str(twitter_time) == False:
                 tweet_time += ", 2021" 
             tweet_time = datetime.strptime(twitter_time, "%b %d, %Y")
-        return str(tweet_time.strftime("%Y%m%d%H%M"))
+        return str(tweet_time.strftime("%Y-%m-%d %H:%M:%S"))
 
 class Main:
     # TODO : Replace with custom link
@@ -196,6 +196,7 @@ class Main:
                 parsed = parser.parse_tweet(tweet)
                 if parsed != None:
                     print(parsed.content)
+                    print(parsed.time)
                     print(parsed.attachments)
                     print(parsed.phone_numbers)
                 print("------------------------")
