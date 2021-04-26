@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 from datetime import datetime, timedelta
 import re
+import telegram_send
 
 class TweetData:
     def __init__(self, content, time, is_verified, upvotes, attachments, phone_numbers):
@@ -185,6 +186,25 @@ class Main:
         # First and only Child of timeline_parent is the actual timeline list element
         self.timeline = (timeline_parent.find_elements_by_xpath("./child::*"))[0]
     
+    def push_to_telegram(self, parsed_tweet):
+        attachment_text = ""
+        for attach in parsed_tweet.attachments:
+            attachment_text += str(attach) + "\n"
+        phone_text = ""
+        for phn in parsed_tweet.phone_numbers:
+            phone_text += str(phn) + "\n"
+
+        text = parsed_tweet.content + "\n\n" + parsed_tweet.time
+        if attachment_text != "":
+            text += "\nAttachments: " + attachment_text
+        if phone_text != "":
+            text += "\nPhone Numbers: " + phone_text
+        # text = parsed_tweet.content + "\n\n" + parsed_tweet.time + "\n" + "Attachements: \n" + attachment_text + "Phone Numbers: \n" + phone_text
+        # text = text.replace("\n", "%0A")
+        # text = text.replace(" ", "%20")
+        # print(text)
+        telegram_send.send(messages=[text])
+    
     # Runs infinitely to constantly find new tweets
     def scrape(self):
         parser = TweetParser()
@@ -201,6 +221,7 @@ class Main:
                 print(parsed.time)
                 print(parsed.attachments)
                 print(parsed.phone_numbers)
+                self.push_to_telegram(parsed)
             print("------------------------")
         latest_tweet = tweets[0]
         while True:
@@ -209,10 +230,11 @@ class Main:
             if latest_tweet != tweets[0]:
                 latest_tweet = tweets[0]
                 parsed_latest = parser.parse_tweet(latest_tweet)
-                print(parsed.content)
-                print(parsed.time)
-                print(parsed.attachments)
-                print(parsed.phone_numbers)
+                print(parsed_latest.content)
+                print(parsed_latest.time)
+                print(parsed_latest.attachments)
+                print(parsed_latest.phone_numbers)
+                self.push_to_telegram(parsed_latest)
             print("------------------------")
 
     def start(self):
