@@ -187,20 +187,32 @@ class Main:
     # Runs infinitely to constantly find new tweets
     def scrape(self):
         parser = TweetParser()
+        latest_tweet = None
+
+        self.move_page()
+        # Children of this element = Root elements of tweets
+        tweets = self.timeline.find_elements_by_xpath("./child::*")
+        print(len(tweets))
+        for tweet in reversed(tweets):
+            parsed = parser.parse_tweet(tweet)
+            if parsed != None:
+                print(parsed.content)
+                print(parsed.time)
+                print(parsed.attachments)
+                print(parsed.phone_numbers)
+            print("------------------------")
+        latest_tweet = tweets[0]
         while True:
-            # Children of this element = Root elements of tweets
-            self.move_page()
-            tweets = self.timeline.find_elements_by_xpath("./child::*")
-            print(len(tweets))
-            for tweet in tweets:
-                parsed = parser.parse_tweet(tweet)
-                if parsed != None:
-                    print(parsed.content)
-                    print(parsed.time)
-                    print(parsed.attachments)
-                    print(parsed.phone_numbers)
-                print("------------------------")
             time.sleep(20)
+            tweets = self.timeline.find_elements_by_xpath("./child::*")
+            if latest_tweet != tweets[0]:
+                latest_tweet = tweets[0]
+                parsed_latest = parser.parse_tweet(latest_tweet)
+                print(parsed.content)
+                print(parsed.time)
+                print(parsed.attachments)
+                print(parsed.phone_numbers)
+            print("------------------------")
 
     def start(self):
         self.setup_webdriver()
