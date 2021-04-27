@@ -196,9 +196,9 @@ class Main:
 
         text = parsed_tweet.content + "\n\n" + parsed_tweet.time
         if attachment_text != "":
-            text += "\nAttachments: " + attachment_text
+            text += "\nAttachments: \n" + attachment_text
         if phone_text != "":
-            text += "\nPhone Numbers: " + phone_text
+            text += "\nPhone Numbers: \n" + phone_text
         # text = parsed_tweet.content + "\n\n" + parsed_tweet.time + "\n" + "Attachements: \n" + attachment_text + "Phone Numbers: \n" + phone_text
         # text = text.replace("\n", "%0A")
         # text = text.replace(" ", "%20")
