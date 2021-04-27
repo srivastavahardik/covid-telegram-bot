@@ -247,7 +247,7 @@ class Main:
                 latest_tweet = tweets[0]
                 parsed_latest = parser.parse_tweet(latest_tweet)
                 # Normalising the point of comparison
-                latest_tweet = latest_tweet.text
+                latest_tweet = parsed_latest.content
                 print(parsed_latest.content)
                 print(parsed_latest.time)
                 print(parsed_latest.attachments)
