@@ -262,6 +262,7 @@ class Main:
         print("debug")
         self.scrape()
 
+# link, tag, telegram_send config
 main = None
 if len(sys.argv) == 1:
     print("Please enter link!")
