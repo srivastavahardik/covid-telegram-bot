@@ -5,6 +5,7 @@ import time
 from datetime import datetime, timedelta
 import re
 import telegram_send
+import sys
 
 class TweetData:
     def __init__(self, content, time, is_verified, upvotes, attachments, phone_numbers):
@@ -139,10 +140,17 @@ class TweetParser:
         return str(tweet_time.strftime("%Y-%m-%d %H:%M:%S"))
 
 class Main:
+    def __init__(self, link, tag, config):
+        self.LINK = str(link)
+        self.TAG = str(tag)
+        self.CONFIG = str(config)
+
     # TODO : Replace with custom link
     # Reference link
     LINK = "https://twitter.com/search?q=verified+Mumbai+%28remdesivir%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live"
     # LINK = "https://twitter.com/search?q=verified+lucknow+%28bed+OR+beds+OR+icu+OR+oxygen+OR+ventilator+OR+ventilators%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live"
+    TAG = ""
+    CONFIG = ""
     driver = None
     timeline = None
 
@@ -203,7 +211,12 @@ class Main:
         # text = text.replace("\n", "%0A")
         # text = text.replace(" ", "%20")
         # print(text)
-        telegram_send.send(messages=[text])
+        if self.TAG != "":
+            text += "\n " + self.TAG
+        if (self.CONFIG != ""):
+            telegram_send.send(conf=self.CONFIG, messages=[text])
+        else:
+            telegram_send.send(messages=[text])
     
     # Runs infinitely to constantly find new tweets
     def scrape(self):
@@ -249,4 +262,11 @@ class Main:
         print("debug")
         self.scrape()
 
-Main().start()
+if len(sys.argv) == 1:
+    print("Please enter link!")
+elif len(sys.argv) == 2:
+    Main(sys.argv[1], "", "").start()
+elif len(sys.argv) == 3:
+    Main(sys.argv[1], sys.argv[2], "").start()
+elif len(sys.argv) == 4:
+    Main(sys.argv[1], sys.argv[2], sys.argv[3]).start()
