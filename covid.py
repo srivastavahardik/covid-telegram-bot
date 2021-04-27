@@ -238,7 +238,7 @@ class Main:
             print("------------------------")
         latest_tweet = tweets[0].text
         while True:
-            time.sleep(20)
+            time.sleep(60)
             # Refreshing because often the page would go stale
             self.launch_webdriver()
             self.find_timeline()
@@ -262,11 +262,16 @@ class Main:
         print("debug")
         self.scrape()
 
+main = None
 if len(sys.argv) == 1:
     print("Please enter link!")
+    exit()
 elif len(sys.argv) == 2:
-    Main(sys.argv[1], "", "").start()
+    main = Main(sys.argv[1], "", "")
 elif len(sys.argv) == 3:
-    Main(sys.argv[1], sys.argv[2], "").start()
+    main = Main(sys.argv[1], sys.argv[2], "")
 elif len(sys.argv) == 4:
-    Main(sys.argv[1], sys.argv[2], sys.argv[3]).start()
+    main = Main(sys.argv[1], sys.argv[2], sys.argv[3])
+
+while True:
+    main.start()
