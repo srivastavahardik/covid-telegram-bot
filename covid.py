@@ -236,14 +236,14 @@ class Main:
                 print(parsed.phone_numbers)
                 self.push_to_telegram(parsed)
             print("------------------------")
-        latest_tweet = tweets[0].text
+        latest_tweet = parser.parse_tweet(tweets[0]).content
         while True:
             time.sleep(60)
             # Refreshing because often the page would go stale
             self.launch_webdriver()
             self.find_timeline()
             tweets = self.timeline.find_elements_by_xpath("./child::*")
-            if latest_tweet != tweets[0].text:
+            if latest_tweet != parser.parse_tweet(tweets[0]).content:
                 latest_tweet = tweets[0]
                 parsed_latest = parser.parse_tweet(latest_tweet)
                 # Normalising the point of comparison
