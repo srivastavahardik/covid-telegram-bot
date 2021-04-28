@@ -147,11 +147,6 @@ class Main:
         self.TAG = str(tag)
         self.CONFIG = str(config)
 
-    def __init__(self, link, tag):
-        self.LINK = str(link)
-        self.TAG = str(tag)
-        self.CONFIG = ""
-
     # TODO : Replace with custom link
     # Reference link
     LINK = "https://twitter.com/search?q=verified+Mumbai+%28remdesivir%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live"
@@ -230,7 +225,7 @@ class Main:
             telegram_send.send(messages=[text])
 
     def upload_to_db(self, parsed_tweet):
-        # https://covid-aid.techburner.in/api/tweets?content=check&resource=remdesivir&location=mumbai&tweeted_time=2021-04-25 06:22:46&attachments=["media/soham.jpg", "media/kk.jpg"]&contacts=["872827892", "2877872672"]
+        # requests.post("https://covid-aid.techburner.in/api/tweets?content=check&resource=remdesivir&location=mumbai&tweeted_time=2021-04-25 06:22:46&attachments=[\"media/soham.jpg\", \"media/kk.jpg\"]&contacts=[\"872827892\", \"2877872672\"]")
         data = {
             "content": parsed_tweet.content,
             "resource": self.TAG,
@@ -243,8 +238,8 @@ class Main:
         p = Request('POST', self.API_URL, params=data).prepare()
 
         manual_url = p.url
+        # manual_url += "&attachments=[\"wwa.google.com\", \"www.test.com\"]"
         manual_url += "&attachments=" + str(parsed_tweet.attachments).replace("'", "\"")
-        # contact_part = ' '.join([("\"" + str(num) + "\",") for num in parsed_tweet.phone_numbers])
         manual_url += "&contacts=" + str(parsed_tweet.phone_numbers).replace("'", "\"")
 
         print("Pushing to server...")
@@ -264,6 +259,7 @@ class Main:
         if self.latest_tweet != top_tweet_parsed.content:
             # New Tweet
             print(top_tweet_parsed.content)
+            self.upload_to_db(top_tweet_parsed)
             self.latest_tweet = top_tweet_parsed.content
         print("------------------------")
 
@@ -303,7 +299,7 @@ links = generate_link_group("Lucknow")
 for i in range(0, len(links)):
     link = links[i]
     tag = tags[i]
-    scrapers.append(Main(link, tag))
+    scrapers.append(Main(link, tag, "Lucknow"))
     scrapers[i].setup_webdriver()
 
 while True:
