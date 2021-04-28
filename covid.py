@@ -242,8 +242,6 @@ class Main:
         print("Pushing to server...")
         print(manual_url)
         requests.post(manual_url)
-        # requests.post("https://covid-aid.techburner.in/api/tweets?content=check&resource=remdesivir&location=mumbai&tweeted_time=2021-04-25 06:22:46&attachments=[\"media/soham.jpg\", \"media/kk.jpg\"]&contacts=[\"872827892\", \"2877872672\"]")
-        # s.send(manual_url)
 
     # Runs infinitely to constantly find new tweets
     def scrape(self):
@@ -280,6 +278,7 @@ class Main:
                 print(parsed_latest.time)
                 print(parsed_latest.attachments)
                 print(parsed_latest.phone_numbers)
+                self.upload_to_db(parsed_latest)
                 # self.push_to_telegram(parsed_latest)
             print("------------------------")
 
@@ -301,7 +300,6 @@ elif len(sys.argv) == 3:
     main = Main(sys.argv[1], sys.argv[2], "")
 elif len(sys.argv) == 4:
     main = Main(sys.argv[1], sys.argv[2], sys.argv[3])
-
 
 while True:
     main.start()
