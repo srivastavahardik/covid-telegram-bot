@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 import re
 import telegram_send
 import sys
+import requests
+from requests import Session, Request
 
 class TweetData:
     def __init__(self, content, time, is_verified, upvotes, attachments, phone_numbers):
@@ -151,6 +153,7 @@ class Main:
     # LINK = "https://twitter.com/search?q=verified+lucknow+%28bed+OR+beds+OR+icu+OR+oxygen+OR+ventilator+OR+ventilators%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live"
     TAG = ""
     CONFIG = ""
+    API_URL = "https://covid-aid.techburner.in/api/tweets"
     driver = None
     timeline = None
 
@@ -217,7 +220,31 @@ class Main:
             telegram_send.send(conf=self.CONFIG, messages=[text])
         else:
             telegram_send.send(messages=[text])
-    
+
+    def upload_to_db(self, parsed_tweet):
+        # https://covid-aid.techburner.in/api/tweets?content=check&resource=remdesivir&location=mumbai&tweeted_time=2021-04-25 06:22:46&attachments=["media/soham.jpg", "media/kk.jpg"]&contacts=["872827892", "2877872672"]
+        data = {
+            "content": parsed_tweet.content,
+            "resource": self.TAG,
+            "location": self.CONFIG,
+            "tweeted_time": parsed_tweet.time,
+            # "attachments": str(parsed_tweet.attachments),
+            # "contacts": str(parsed_tweet.phone_numbers)
+        }
+        s = Session()
+        p = Request('POST', self.API_URL, params=data).prepare()
+
+        manual_url = p.url
+        manual_url += "&attachments=" + str(parsed_tweet.attachments).replace("'", "\"")
+        # contact_part = ' '.join([("\"" + str(num) + "\",") for num in parsed_tweet.phone_numbers])
+        manual_url += "&contacts=" + str(parsed_tweet.phone_numbers).replace("'", "\"")
+
+        print("Pushing to server...")
+        print(manual_url)
+        requests.post(manual_url)
+        # requests.post("https://covid-aid.techburner.in/api/tweets?content=check&resource=remdesivir&location=mumbai&tweeted_time=2021-04-25 06:22:46&attachments=[\"media/soham.jpg\", \"media/kk.jpg\"]&contacts=[\"872827892\", \"2877872672\"]")
+        # s.send(manual_url)
+
     # Runs infinitely to constantly find new tweets
     def scrape(self):
         parser = TweetParser()
@@ -234,7 +261,8 @@ class Main:
                 print(parsed.time)
                 print(parsed.attachments)
                 print(parsed.phone_numbers)
-                self.push_to_telegram(parsed)
+                self.upload_to_db(parsed)
+                # self.push_to_telegram(parsed)
             print("------------------------")
         latest_tweet = parser.parse_tweet(tweets[0]).content
         while True:
@@ -252,7 +280,7 @@ class Main:
                 print(parsed_latest.time)
                 print(parsed_latest.attachments)
                 print(parsed_latest.phone_numbers)
-                self.push_to_telegram(parsed_latest)
+                # self.push_to_telegram(parsed_latest)
             print("------------------------")
 
     def start(self):
@@ -273,6 +301,7 @@ elif len(sys.argv) == 3:
     main = Main(sys.argv[1], sys.argv[2], "")
 elif len(sys.argv) == 4:
     main = Main(sys.argv[1], sys.argv[2], sys.argv[3])
+
 
 while True:
     main.start()
