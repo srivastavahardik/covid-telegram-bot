@@ -315,5 +315,8 @@ for i in range(0, len(links)):
 
 while True:
     for scraper in scrapers:
-        time.sleep(5)
-        scraper.check_new()
+        try :
+            time.sleep(5)
+            scraper.check_new()
+        except:
+            scraper.setup_webdriver()
