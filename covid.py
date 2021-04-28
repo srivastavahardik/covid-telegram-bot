@@ -147,6 +147,11 @@ class Main:
         self.TAG = str(tag)
         self.CONFIG = str(config)
 
+    def __init__(self, link, tag):
+        self.LINK = str(link)
+        self.TAG = str(tag)
+        self.CONFIG = ""
+
     # TODO : Replace with custom link
     # Reference link
     LINK = "https://twitter.com/search?q=verified+Mumbai+%28remdesivir%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live"
@@ -298,7 +303,7 @@ links = generate_link_group("Lucknow")
 for i in range(0, len(links)):
     link = links[i]
     tag = tags[i]
-    scrapers.append(Main(link, tag, ""))
+    scrapers.append(Main(link, tag))
     scrapers[i].setup_webdriver()
 
 while True:
