@@ -269,17 +269,39 @@ class Main:
             self.check_new()
             time.sleep(10)
 
-# link, tag, telegram_send config
-main = None
-if len(sys.argv) == 1:
-    print("Please enter link!")
-    exit()
-elif len(sys.argv) == 2:
-    main = Main(sys.argv[1], "", "")
-elif len(sys.argv) == 3:
-    main = Main(sys.argv[1], sys.argv[2], "")
-elif len(sys.argv) == 4:
-    main = Main(sys.argv[1], sys.argv[2], sys.argv[3])
+# Oxygen/Ventilator
+# Medicine
+# Plasma
+links = [
+    "https://twitter.com/search?q=verified+Lucknow+%28oxygen+OR+ventilator+OR+ventilators%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live",
+    "https://twitter.com/search?q=verified+Lucknow+%28fabiflu+OR+remdesivir+OR+favipiravir+OR+tocilizumab%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live",
+    "https://twitter.com/search?q=verified+Lucknow+%28plasma%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live"
+]
+
+scrapers = []
+for link in links:
+    scrapers.append(Main(link, "", ""))
+
+for scraper in scrapers:
+    scraper.setup_webdriver()
 
 while True:
-    main.start()
+    for scraper in scrapers:
+        time.sleep(5)
+        scraper.check_new()
+
+
+# # link, tag, telegram_send config
+# main = None
+# if len(sys.argv) == 1:
+#     print("Please enter link!")
+#     exit()
+# elif len(sys.argv) == 2:
+#     main = Main(sys.argv[1], "", "")
+# elif len(sys.argv) == 3:
+#     main = Main(sys.argv[1], sys.argv[2], "")
+# elif len(sys.argv) == 4:
+#     main = Main(sys.argv[1], sys.argv[2], sys.argv[3])
+
+# while True:
+#     main.start()
