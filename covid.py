@@ -220,7 +220,7 @@ class Main:
         if self.TAG != "":
             text += "\n " + self.TAG
         if (self.CONFIG != ""):
-            telegram_send.send(conf=self.CONFIG, messages=[text])
+            telegram_send.send(conf=str(self.CONFIG).lower(), messages=[text])
         else:
             telegram_send.send(messages=[text])
 
