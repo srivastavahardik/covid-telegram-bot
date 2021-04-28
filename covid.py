@@ -259,6 +259,9 @@ class Main:
         if self.latest_tweet != top_tweet_parsed.content:
             # New Tweet
             print(top_tweet_parsed.content)
+            print(top_tweet_parsed.time)
+            print(top_tweet_parsed.attachments)
+            print(top_tweet_parsed.phone_numbers)
             self.upload_to_db(top_tweet_parsed)
             self.latest_tweet = top_tweet_parsed.content
         print("------------------------")
