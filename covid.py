@@ -218,7 +218,7 @@ class Main:
         # text = text.replace(" ", "%20")
         # print(text)
         if self.TAG != "":
-            text += "\n " + self.TAG
+            text += "\n #" + self.TAG
         if (self.CONFIG != ""):
             telegram_send.send(conf=str(self.CONFIG).lower(), messages=[text])
         else:
@@ -263,6 +263,7 @@ class Main:
             print(top_tweet_parsed.attachments)
             print(top_tweet_parsed.phone_numbers)
             self.upload_to_db(top_tweet_parsed)
+            self.push_to_telegram(top_tweet_parsed)
             self.latest_tweet = top_tweet_parsed.content
         print("------------------------")
 
