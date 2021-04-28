@@ -156,6 +156,9 @@ class Main:
     API_URL = "https://covid-aid.techburner.in/api/tweets"
     driver = None
     timeline = None
+    parser = TweetParser()
+    tweets = None
+    latest_tweet = None
 
     # Setup options for chrome driver
     def setup_webdriver(self):
@@ -245,49 +248,26 @@ class Main:
 
     # Runs infinitely to constantly find new tweets
     def scrape(self):
-        parser = TweetParser()
-        latest_tweet = None
-
-        self.move_page()
+        self.launch_webdriver()
+        self.find_timeline()
         # Children of this element = Root elements of tweets
-        tweets = self.timeline.find_elements_by_xpath("./child::*")
-        print(len(tweets))
-        for tweet in reversed(tweets):
-            parsed = parser.parse_tweet(tweet)
-            if parsed != None:
-                print(parsed.content)
-                print(parsed.time)
-                print(parsed.attachments)
-                print(parsed.phone_numbers)
-                self.upload_to_db(parsed)
-                # self.push_to_telegram(parsed)
-            print("------------------------")
-        latest_tweet = parser.parse_tweet(tweets[0]).content
-        while True:
-            time.sleep(60)
-            # Refreshing because often the page would go stale
-            self.launch_webdriver()
-            self.find_timeline()
-            tweets = self.timeline.find_elements_by_xpath("./child::*")
-            if latest_tweet != parser.parse_tweet(tweets[0]).content:
-                latest_tweet = tweets[0]
-                parsed_latest = parser.parse_tweet(latest_tweet)
-                # Normalising the point of comparison
-                latest_tweet = parsed_latest.content
-                print(parsed_latest.content)
-                print(parsed_latest.time)
-                print(parsed_latest.attachments)
-                print(parsed_latest.phone_numbers)
-                self.upload_to_db(parsed_latest)
-                # self.push_to_telegram(parsed_latest)
-            print("------------------------")
+        self.tweets = self.timeline.find_elements_by_xpath("./child::*")
+
+    def check_new(self):
+        self.scrape()
+        top_tweet_parsed = self.parser.parse_tweet(self.tweets[0])
+        if self.latest_tweet != top_tweet_parsed.content:
+            # New Tweet
+            print(top_tweet_parsed.content)
+            self.latest_tweet = top_tweet_parsed.content
+        print("------------------------")
 
     def start(self):
         self.setup_webdriver()
-        self.launch_webdriver()
-        self.find_timeline()
         print("debug")
-        self.scrape()
+        while True:
+            self.check_new()
+            time.sleep(10)
 
 # link, tag, telegram_send config
 main = None
