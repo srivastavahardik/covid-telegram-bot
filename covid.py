@@ -293,13 +293,20 @@ tags = [
     "Plasma"
 ]
 
+if len(sys.argv) < 2:
+    print("Please provide location as argument!")
+    exit(1)
+
+location = str(sys.argv[1])
+print("Location provded: " + location)
+
 scrapers = []
-links = generate_link_group("Lucknow")
+links = generate_link_group(location)
 
 for i in range(0, len(links)):
     link = links[i]
     tag = tags[i]
-    scrapers.append(Main(link, tag, "Lucknow"))
+    scrapers.append(Main(link, tag, location))
     scrapers[i].setup_webdriver()
 
 while True:
