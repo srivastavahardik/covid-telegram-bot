@@ -142,23 +142,25 @@ class TweetParser:
         return str(tweet_time.strftime("%Y-%m-%d %H:%M:%S"))
 
 class Main:
-    def __init__(self, link, tag, config):
-        self.LINK = str(link)
-        self.TAG = str(tag)
+    def __init__(self, links, tags, config):
+        self.LINKS = list(links)
+        for link in links:
+            self.LATEST_TWEET.append(None)
+        self.TAGS = list(tags)
         self.CONFIG = str(config)
 
     # TODO : Replace with custom link
     # Reference link
-    LINK = "https://twitter.com/search?q=verified+Mumbai+%28remdesivir%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live"
-    # LINK = "https://twitter.com/search?q=verified+lucknow+%28bed+OR+beds+OR+icu+OR+oxygen+OR+ventilator+OR+ventilators%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live"
-    TAG = ""
+    LINKS = []
+    LATEST_TWEET = []
+    CURRENT = -1
+    TAGS = []
     CONFIG = ""
     API_URL = "https://covid-aid.techburner.in/api/tweets"
     driver = None
     timeline = None
     parser = TweetParser()
     tweets = None
-    latest_tweet = None
 
     # Setup options for chrome driver
     def setup_webdriver(self):
@@ -169,13 +171,19 @@ class Main:
         # Hide automation
         option.add_argument('--disable-blink-features=AutomationControlled')
         # Start headlessly
-        option.headless = True
+        option.headless = False
         # Open Browser
         self.driver = webdriver.Chrome(options=option)
 
+    def rotate_link(self):
+        self.CURRENT += 1
+        if self.CURRENT == len(self.LINKS):
+            self.CURRENT = 0
+
     def launch_webdriver(self):
+        self.rotate_link()
         # Opening search results
-        self.driver.get(self.LINK)
+        self.driver.get(self.LINKS[self.CURRENT])
 
     def move_page(self):
         self.driver.execute_script("window.scrollTo(0, window.scrollY + 250)")
@@ -217,8 +225,8 @@ class Main:
         # text = text.replace("\n", "%0A")
         # text = text.replace(" ", "%20")
         # print(text)
-        if self.TAG != "":
-            text += "\n #" + self.TAG
+        if self.TAGS[self.CURRENT] != "":
+            text += "\n #" + self.TAGS[self.CURRENT]
         if (self.CONFIG != ""):
             telegram_send.send(conf=str(self.CONFIG).lower(), messages=[text])
         else:
@@ -228,7 +236,7 @@ class Main:
         # requests.post("https://covid-aid.techburner.in/api/tweets?content=check&resource=remdesivir&location=mumbai&tweeted_time=2021-04-25 06:22:46&attachments=[\"media/soham.jpg\", \"media/kk.jpg\"]&contacts=[\"872827892\", \"2877872672\"]")
         data = {
             "content": parsed_tweet.content,
-            "resource": self.TAG,
+            "resource": self.TAGS[self.CURRENT],
             "location": self.CONFIG,
             "tweeted_time": parsed_tweet.time,
             # "attachments": str(parsed_tweet.attachments),
@@ -256,7 +264,7 @@ class Main:
     def check_new(self):
         self.scrape()
         top_tweet_parsed = self.parser.parse_tweet(self.tweets[0])
-        if self.latest_tweet != top_tweet_parsed.content:
+        if self.LATEST_TWEET[self.CURRENT] != top_tweet_parsed.content:
             # New Tweet
             print(top_tweet_parsed.content)
             print(top_tweet_parsed.time)
@@ -264,7 +272,7 @@ class Main:
             print(top_tweet_parsed.phone_numbers)
             self.upload_to_db(top_tweet_parsed)
             self.push_to_telegram(top_tweet_parsed)
-            self.latest_tweet = top_tweet_parsed.content
+            self.LATEST_TWEET[self.CURRENT] = top_tweet_parsed.content
         print("------------------------")
 
     def start(self):
@@ -304,19 +312,12 @@ if len(sys.argv) < 2:
 location = str(sys.argv[1])
 print("Location provded: " + location)
 
-scrapers = []
 links = generate_link_group(location)
-
-for i in range(0, len(links)):
-    link = links[i]
-    tag = tags[i]
-    scrapers.append(Main(link, tag, location))
-    scrapers[i].setup_webdriver()
-
+scraper = Main(links, tags, location)
+scraper.setup_webdriver()
 while True:
-    for scraper in scrapers:
-        try :
-            time.sleep(5)
-            scraper.check_new()
-        except:
-            scraper.setup_webdriver()
+    time.sleep(5)
+    try:
+        scraper.check_new()
+    except:
+        telegram_send.send(conf="error", messages=["Script errored for " + location])
