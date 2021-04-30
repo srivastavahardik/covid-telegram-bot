@@ -136,9 +136,7 @@ class TweetParser:
             now = datetime.now()
             tweet_time = now - diff
         else:
-            if "2021" in str(twitter_time) == False:
-                tweet_time += ", 2021" 
-            tweet_time = datetime.strptime(twitter_time, "%b %d, %Y")
+            tweet_time = datetime.strptime(twitter_time + ", 2021", "%d %b, %Y")
         return str(tweet_time.strftime("%Y-%m-%d %H:%M:%S"))
 
 class Main:
