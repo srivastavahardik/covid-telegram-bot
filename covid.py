@@ -289,6 +289,9 @@ class Main:
         while True:
             self.check_new()
             time.sleep(10)
+    
+    def stop(self):
+        self.driver.quit()
 
 
 def generate_link_group(location):
@@ -321,11 +324,15 @@ location = str(sys.argv[1])
 print("Location provded: " + location)
 
 links = generate_link_group(location)
-scraper = Main(links, tags, location)
-scraper.setup_webdriver()
 while True:
-    time.sleep(5)
-    try:
-        scraper.check_new()
-    except:
-        telegram_send.send(conf="error", messages=["Script errored for " + location])
+    scraper = Main(links, tags, location)
+    scraper.setup_webdriver()
+    total_time = 3600 # Reset Timer
+    while total_time > 0:
+        time.sleep(5)
+        total_time -= 5
+        try:
+            scraper.check_new()
+        except:
+            telegram_send.send(conf="error", messages=["Script errored for " + location])
+    scraper.stop()
