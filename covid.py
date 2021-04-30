@@ -58,6 +58,16 @@ class TweetParser:
         content = str(content).strip()
         content = content.replace("  ", " ")
         return content
+    
+    # Match text patterns to see if tweet is valid
+    def is_tweet_valid(self, content):
+        not_have = ["please share any", "kindly provide", "please help people", "levels dropped to", "only please"]
+        content = str(content).lower()
+        for sent in not_have:
+            if sent in content:
+                return False
+        return True
+            
 
     def get_tweet_text(self, tweet_content):
         tweet_content = list(tweet_content)
@@ -262,7 +272,7 @@ class Main:
     def check_new(self):
         self.scrape()
         top_tweet_parsed = self.parser.parse_tweet(self.tweets[0])
-        if self.LATEST_TWEET[self.CURRENT] != top_tweet_parsed.content:
+        if self.LATEST_TWEET[self.CURRENT] != top_tweet_parsed.content and self.parser.is_tweet_valid(top_tweet_parsed.content) == True:
             # New Tweet
             print(top_tweet_parsed.content)
             print(top_tweet_parsed.time)
