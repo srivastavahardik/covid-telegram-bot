@@ -97,7 +97,7 @@ class TweetParser:
         return medias
 
     def is_media_valid(self, url):
-        unwanted = ["/profile_images/", "/emoji/", "profile_image"]
+        unwanted = ["/profile_images/", "/emoji/", "profile_image", "hashflags"]
         for unw in unwanted:
             if unw in url:
                 return False
