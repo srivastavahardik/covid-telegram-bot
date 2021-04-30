@@ -47,7 +47,7 @@ class TweetParser:
         and_encountered = False
         for word in tweet_content:
             word = str(word).strip()
-            if word[0] == '@' or word == "Replying to" or word == "and":
+            if word[0] == '@' or word == "Replying to" or word == "and" or ("and" in word and "others" in word) == True:
                 reply_index += 1
             else:
                 break
