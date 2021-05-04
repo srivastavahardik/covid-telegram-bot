@@ -152,21 +152,23 @@ class TweetParser:
         return str(tweet_time.strftime("%Y-%m-%d %H:%M:%S"))
 
 class Main:
-    def __init__(self, links, tags, config):
+    def __init__(self, links, tags, config, webdriver_type, headless):
         self.LINKS = list(links)
         for link in links:
             self.LATEST_TWEET.append(None)
         self.TAGS = list(tags)
         self.CONFIG = str(config)
+        self.WEBDRIVER_TYPE = webdriver_type
+        self.HEADLESS = headless
 
-    # TODO : Replace with custom link
-    # Reference link
     LINKS = []
     LATEST_TWEET = []
     CURRENT = -1
     TAGS = []
     CONFIG = ""
     API_URL = "https://covidsupport.xyz/api/tweets"
+    WEBDRIVER_TYPE = "chrome"
+    HEADLESS = False
     driver = None
     timeline = None
     parser = TweetParser()
@@ -176,14 +178,17 @@ class Main:
     def setup_webdriver(self):
         # Setting up Chrome options
         # option = webdriver.FirefoxOptions()
-        option = webdriver.ChromeOptions()
-        # For ChromeDriver version 79.0.3945.16 or over
-        # Hide automation
-        option.add_argument('--disable-blink-features=AutomationControlled')
-        # Start headlessly
-        option.headless = False
-        # Open Browser
-        self.driver = webdriver.Chrome(options=option)
+        if self.WEBDRIVER_TYPE == "chrome":
+            option = webdriver.ChromeOptions()
+            # For ChromeDriver version 79.0.3945.16 or over
+            # Hide automation
+            option.add_argument('--disable-blink-features=AutomationControlled')
+            option.headless = self.HEADLESS
+            self.driver = webdriver.Chrome(options=option)
+        elif self.WEBDRIVER_TYPE == "firefox":
+            option = webdriver.FirefoxOptions()
+            option.headless = self.HEADLESS
+            self.driver = webdriver.Firefox(options=option)
 
     def rotate_link(self):
         self.CURRENT += 1
@@ -327,7 +332,7 @@ print("Location provded: " + location)
 
 links = generate_link_group(location)
 while True:
-    scraper = Main(links, tags, location)
+    scraper = Main(links, tags, location, "firefox", True)
     scraper.setup_webdriver()
     total_time = 3600 # Reset Timer
     while total_time > 0:
