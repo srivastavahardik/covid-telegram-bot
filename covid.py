@@ -298,11 +298,11 @@ class Main:
 
 def generate_link_group(location):
     return [
-        "https://twitter.com/search?q=verified+" + str(location) + "+%28bed+OR+beds%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live",
-        "https://twitter.com/search?q=verified+" + str(location) + "+%28icu%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live",
-        "https://twitter.com/search?q=verified+" + str(location) + "+%28oxygen+OR+ventilator+OR+ventilators%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live",
-        "https://twitter.com/search?q=verified+" + str(location) + "+%28fabiflu+OR+remdesivir+OR+favipiravir+OR+tocilizumab%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live",
-        "https://twitter.com/search?q=verified+" + str(location) + "+%28plasma%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live"
+        "https://twitter.com/search?q=verified+(" + str(location) + ")+%28bed+OR+beds%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live",
+        "https://twitter.com/search?q=verified+(" + str(location) + ")+%28icu%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live",
+        "https://twitter.com/search?q=verified+(" + str(location) + ")+%28oxygen+OR+ventilator+OR+ventilators%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live",
+        "https://twitter.com/search?q=verified+(" + str(location) + ")+%28fabiflu+OR+remdesivir+OR+favipiravir+OR+tocilizumab%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live",
+        "https://twitter.com/search?q=verified+(" + str(location) + ")+%28plasma%29+-%22not+verified%22+-%22unverified%22+-%22needed%22+-%22need%22+-%22needs%22+-%22required%22+-%22require%22+-%22requires%22+-%22requirement%22+-%22requirements%22&f=live"
     ]
 
 # Beds
