@@ -66,7 +66,7 @@ class TweetParser:
         excl.close()
         content = str(content).lower()
         for sent in not_have:
-            if sent in content:
+            if sent.rstrip() in content:
                 return False
         return True
             
