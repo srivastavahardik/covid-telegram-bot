@@ -310,9 +310,13 @@ def generate_link_group(location):
 # Oxygen/Ventilator
 # Medicine
 # Plasma
-t = open("tags", "r")
-tags = t.readlines()
-t.close()
+tags = [
+    "Beds",
+    "ICU",
+    "Oxygen",
+    "Medicine",
+    "Plasma"
+]
 
 if len(sys.argv) < 2:
     print("Please provide location as argument!")
