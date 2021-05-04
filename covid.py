@@ -166,7 +166,7 @@ class Main:
     CURRENT = -1
     TAGS = []
     CONFIG = ""
-    API_URL = "https://covid-aid.techburner.in/api/tweets"
+    API_URL = "https://covidsupport.xyz/api/tweets"
     driver = None
     timeline = None
     parser = TweetParser()
