@@ -61,7 +61,24 @@ class TweetParser:
     
     # Match text patterns to see if tweet is valid
     def is_tweet_valid(self, content):
-        not_have = ["please share any", "kindly provide", "please help people", "levels dropped to", "only please"]
+        not_have = [
+            "please share any",
+            "please share some",
+            "please share verified"
+            "kindly provide",
+            "do me update",
+            "update me",
+            "please help people",
+            "levels dropped to",
+            "only please",
+            "urgent request",
+            "struggling with requests",
+            "have gone through",
+            "no luck",
+            "any other",
+            "help to get",
+            "can you please"
+        ]
         content = str(content).lower()
         for sent in not_have:
             if sent in content:
