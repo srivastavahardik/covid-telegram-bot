@@ -327,12 +327,23 @@ if len(sys.argv) < 2:
     print("Please provide location as argument!")
     exit(1)
 
+# city=city 1,city 2
 location = str(sys.argv[1])
-print("Location provded: " + location)
+# [city] [city 1,city 2]
+location = location.split("=")
+# city
+config = location[0]
+if len(location) > 1:
+    city = location[1].replace(",", " OR ")
+else:
+    city = config
 
-links = generate_link_group(location)
+print("Using config: " + config)
+print("Location provded: " + city)
+
+links = generate_link_group(city)
 while True:
-    scraper = Main(links, tags, location, "firefox", True)
+    scraper = Main(links, tags, config, "firefox", True)
     scraper.setup_webdriver()
     total_time = 3600 # Reset Timer
     while total_time > 0:
